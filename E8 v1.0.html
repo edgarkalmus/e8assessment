@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACSC Essential Eight Maturity Self-Assessment Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-inner {
+            height: 100%;
+            background-color: #4299e1;
+            transition: width 0.3s ease;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-yes {
+            background-color: #48bb78;
+        }
+        
+        .btn-no {
+            background-color: #f56565;
+        }
+        
+        .btn-partially {
+            background-color: #ed8936;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .strategy-card {
+            border-left: 4px solid transparent;
+        }
+        
+        .strategy-card-level-0 {
+            border-left-color: #f56565;
+        }
+        
+        .strategy-card-level-1 {
+            border-left-color: #ed8936;
+        }
+        
+        .strategy-card-level-2 {
+            border-left-color: #3182ce;
+        }
+        
+        .strategy-card-level-3 {
+            border-left-color: #48bb78;
+        }
+        
+        .answer-pill {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .answer-yes {
+            background-color: #c6f6d5;
+            color: #276749;
+        }
+        
+        .answer-no {
+            background-color: #fed7d7;
+            color: #9b2c2c;
+        }
+        
+        .answer-partially {
+            background-color: #feebc8;
+            color: #9c4221;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Accordion styles */
+        .accordion-header {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content.active {
+            max-height: 2000px;
+        }
+        
+        /* Accessibility focus styles */
+        :focus {
+            outline: 2px solid #4299e1;
+            outline-offset: 2px;
+        }
+        
+        /* Optimize for PDF export */
+        @media print {
+            .page-break {
+                display: none;
+            }
+            
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
+            }
+            
+            .container {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .hidden-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            .print-full-width {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-6 shadow-md">
+        <div class="container">
+            <h1 class="text-3xl md:text-4xl font-bold text-center">Essential Eight Maturity Self-Assessment Tool</h1>
+            <p class="text-center mt-2 text-blue-100">Based on the Australian Cyber Security Centre (ACSC) Framework</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-8">
+        <!-- Introduction Section (shown initially) -->
+        <section id="intro-section" class="fade-in">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-4 text-blue-700">About the Essential Eight</h2>
+                <p class="mb-4">The Essential Eight is a set of mitigation strategies developed by the Australian Cyber Security Centre (ACSC) to help organizations protect themselves against various cyber threats. These strategies can be implemented at different maturity levels (0-3), with higher levels providing stronger security posture.</p>
+                
+                <!-- Strategies Overview -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">The Eight Mitigation Strategies</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">1</span> Application Control</h4>
+                            <p class="text-sm mt-1">Prevent execution of unapproved/malicious programs</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">2</span> Patch Applications</h4>
+                            <p class="text-sm mt-1">Patch/mitigate computer vulnerabilities in applications</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">3</span> Configure MS Office Macros</h4>
+                            <p class="text-sm mt-1">Block macros from the Internet and restricting permission</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">4</span> User Application Hardening</h4>
+                            <p class="text-sm mt-1">Configure web browsers and other applications securely</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">5</span> Restrict Admin Privileges</h4>
+                            <p class="text-sm mt-1">Restrict administrative privileges to operating systems and applications</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">6</span> Patch Operating Systems</h4>
+                            <p class="text-sm mt-1">Patch/mitigate computer vulnerabilities in operating systems</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">7</span> Multi-factor Authentication</h4>
+                            <p class="text-sm mt-1">Strengthen user authentication with multi-factor authentication</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold flex items-center"><span class="bg-blue-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2">8</span> Regular Backups</h4>
+                            <p class="text-sm mt-1">Daily backups of important data, software, and configuration settings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Maturity Levels Explanation -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Maturity Levels Explained</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-red-700">Level 0</h4>
+                            <p class="text-sm mt-1">Weaknesses in overall cyber security posture that could be exploited.</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-orange-700">Level 1</h4>
+                            <p class="text-sm mt-1">Provides mitigation against adversaries using commodity capabilities.</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-blue-700">Level 2</h4>
+                            <p class="text-sm mt-1">Provides mitigation against adversaries using sophisticated capabilities.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-700">Level 3</h4>
+                            <p class="text-sm mt-1">Provides mitigation against adversaries using advanced tradecraft and techniques.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assessment Mode Selection -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold mb-4 text-blue-700">Select Assessment Mode</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Full Assessment Option -->
+                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-200 hover:border-blue-400 cursor-pointer transition-all" id="full-assessment-option">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-2">Full Assessment</h3>
+                        <p class="mb-4">Complete assessment of all maturity levels (0-3) across all eight strategies.</p>
+                        <ul class="text-sm space-y-1 mb-4">
+                            <li class="flex items-center"><svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Comprehensive evaluation</li>
+                            <li class="flex items-center"><svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Detailed recommendations</li>
+                            <li class="flex items-center"><svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Complete maturity profile</li>
+                        </ul>
+                        <button class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors duration-200" onclick="startAssessment('full')">Start Full Assessment</button>
+                    </div>
+                    
+                    <!-- Maturity Goal Assessment Option -->
+                    <div class="bg-green-50 p-5 rounded-lg border border-green-200 hover:border-green-400 cursor-pointer transition-all" id="goal-assessment-option">
+                        <h3 class="text-xl font-semibold text-green-700 mb-2">Maturity Goal Assessment</h3>
+                        <p class="mb-4">Assessment tailored to your target maturity level.</p>
+                        <div class="mb-4">
+                            <p class="text-sm mb-2 font-medium">Select Target Maturity Level:</p>
+                            <div class="flex space-x-2">
+                                <button class="maturity-level-btn py-1 px-3 bg-white border border-orange-300 text-orange-600 font-medium rounded-lg hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75 transition-colors duration-200" data-level="1">Level 1</button>
+                                <button class="maturity-level-btn py-1 px-3 bg-white border border-blue-300 text-blue-600 font-medium rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors duration-200" data-level="2">Level 2</button>
+                                <button class="maturity-level-btn py-1 px-3 bg-white border border-green-300 text-green-600 font-medium rounded-lg hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-colors duration-200" data-level="3">Level 3</button>
+                            </div>
+                        </div>
+                        <button id="goal-assessment-btn" class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-colors duration-200" disabled>Start Goal Assessment</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Assessment Section (hidden initially) -->
+        <section id="assessment-section" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-blue-700">Essential Eight Assessment</h2>
+                    <span id="question-counter" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Question 1 of 120</span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-bar mb-6">
+                    <div class="progress-bar-inner" style="width: 0%;"></div>
+                </div>
+                
+                <!-- Question Card -->
+                <div id="question-card" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="mb-4">
+                        <span id="strategy-badge" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Application Control</span>
+                        <span id="maturity-badge" class="ml-2 px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">Maturity Level 1</span>
+                    </div>
+                    <h3 id="question-text" class="text-lg font-semibold mb-6">Loading question...</h3>
+                    
+                    <!-- Answer Buttons -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="answer-btn btn btn-yes py-4 px-6 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center" data-answer="yes">
+                            <svg class="h-8 w-8 mb-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>YES</span>
+                            <span class="text-xs opacity-80 mt-1">All systems/locations as per definition</span>
+                        </button>
+                        <button class="answer-btn btn btn-no py-4 px-6 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center" data-answer="no">
+                            <svg class="h-8 w-8 mb-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>NO</span>
+                            <span class="text-xs opacity-80 mt-1">Not implemented</span>
+                        </button>
+                        <button class="answer-btn btn btn-partially py-4 px-6 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center" data-answer="partially">
+                            <svg class="h-8 w-8 mb-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>PARTIALLY</span>
+                            <span class="text-xs opacity-80 mt-1">Some systems only</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-6">
+                    <button id="prev-btn" class="py-2 px-4 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition-colors duration-200 hidden">
+                        <svg class="h-5 w-5 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        Previous
+                    </button>
+                    <button id="next-btn" class="py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Next
+                        <svg class="h-5 w-5 inline-block ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Results Section (hidden initially) -->
+        <section id="results-section" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-6 text-blue-700">Essential Eight Assessment Results</h2>
+                
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h3 class="font-semibold text-blue-700 mb-1">Overall Maturity Level</h3>
+                        <p id="overall-maturity" class="text-3xl font-bold"></p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <h3 class="font-semibold text-green-700 mb-1">Strategies at Target</h3>
+                        <p id="strategies-at-target" class="text-3xl font-bold"></p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                        <h3 class="font-semibold text-orange-700 mb-1">Overall Compliance</h3>
+                        <p id="overall-compliance" class="text-3xl font-bold"></p>
+                    </div>
+                </div>
+                
+                <!-- Chart Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Radar Chart -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">Maturity Radar</h3>
+                        <div class="chart-container" style="position: relative; height:300px; width:100%">
+                            <canvas id="radar-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Bar Chart -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">Compliance Percentage by Strategy</h3>
+                        <div class="chart-container" style="position: relative; height:300px; width:100%">
+                            <canvas id="bar-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Strategy Maturity Table -->
+                <h3 class="text-xl font-semibold mb-4 text-blue-700">Strategy-Level Maturity Summary</h3>
+                <div class="overflow-x-auto mb-8">
+                    <table class="min-w-full bg-white border border-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-b">Strategy</th>
+                                <th class="py-3 px-4 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-b">Maturity Level</th>
+                                <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-b">Key Gaps</th>
+                            </tr>
+                        </thead>
+                        <tbody id="strategy-maturity-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Detailed Breakdown Section -->
+                <h3 class="text-xl font-semibold mb-4 text-blue-700">Strategy-Specific Detailed Breakdown</h3>
+                <div id="detailed-breakdown" class="space-y-4">
+                    <!-- Accordion items will be populated by JavaScript -->
+                </div>
+                
+                <!-- Recommendations Section -->
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-blue-700">Key Recommendations</h3>
+                <div id="recommendations" class="bg-blue-50 p-4 rounded-lg">
+                    <!-- Recommendations will be populated by JavaScript -->
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center mt-8 space-x-0 space-y-4 md:space-x-4 md:space-y-0">
+                    <button id="restart-btn" class="w-full md:w-auto py-2 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors duration-200">
+                        <svg class="h-5 w-5 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                        </svg>
+                        Restart Assessment
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container">
+            <p class="text-center text-gray-400 text-sm">
+                Based on the <a href="https://www.cyber.gov.au/resources-business-and-government/essential-cybersecurity/essential-eight" class="text-blue-300 hover:text-blue-200 underline">Australian Cyber Security Centre Essential Eight Framework</a>
+            </p>
+            <p class="text-center text-gray-500 text-xs mt-2">
+                This tool is for self-assessment purposes only. Your responses are saved only in your browser's local storage.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Essential Eight Questions Data
+        const e8Questions = {
+            "applicationControl": {
+                "level1": [
+                    {
+                        "id": "ac_l1_q1",
+                        "text": "Application control is implemented on workstations.",
+                        "strategy": "Application Control",
+                        "level": 1
+                    },
+                    {
+                        "id": "ac_l1_q2",
+                        "text": "Application control is applied to user profiles and temporary folders used by operating systems, web browsers and email clients.",
+                        "strategy": "Application Control",
+                        "level": 1
+                    },
+                    {
+                        "id": "ac_l1_q3",
+                        "text": "Application control restricts the execution of executables, software libraries, scripts, installers, compiled HTML, HTML applications and control panel applets to an organisation-approved set.",
+                        "strategy": "Application Control",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "ac_l2_q1",
+                        "text": "Application control is implemented on internet-facing servers.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q2",
+                        "text": "Application control is applied to all locations other than user profiles and temporary folders used by operating systems, web browsers and email clients.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q3",
+                        "text": "Microsoft's recommended application blocklist is implemented.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q4",
+                        "text": "Application control rulesets are validated on an annual or more frequent basis.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q5",
+                        "text": "Allowed and blocked application control events are centrally logged.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q6",
+                        "text": "Event logs are protected from unauthorised modification and deletion.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    },
+                    {
+                        "id": "ac_l2_q7",
+                        "text": "Event logs from internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Application Control",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "ac_l3_q1",
+                        "text": "Application control is implemented on non-internet-facing servers.",
+                        "strategy": "Application Control",
+                        "level": 3
+                    },
+                    {
+                        "id": "ac_l3_q2",
+                        "text": "Application control restricts the execution of drivers to an organisation-approved set.",
+                        "strategy": "Application Control",
+                        "level": 3
+                    },
+                    {
+                        "id": "ac_l3_q3",
+                        "text": "Microsoft's vulnerable driver blocklist is implemented.",
+                        "strategy": "Application Control",
+                        "level": 3
+                    },
+                    {
+                        "id": "ac_l3_q4",
+                        "text": "Event logs from non-internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Application Control",
+                        "level": 3
+                    },
+                    {
+                        "id": "ac_l3_q5",
+                        "text": "Event logs from workstations are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Application Control",
+                        "level": 3
+                    }
+                ]
+            },
+            "patchApplications": {
+                "level1": [
+                    {
+                        "id": "pa_l1_q1",
+                        "text": "An automated method of asset discovery is used at least fortnightly to support the detection of assets for subsequent vulnerability scanning activities.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q2",
+                        "text": "A vulnerability scanner with an up-to-date vulnerability database is used for vulnerability scanning activities.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q3",
+                        "text": "A vulnerability scanner is used at least daily to identify missing patches or updates for vulnerabilities in online services.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q4",
+                        "text": "A vulnerability scanner is used at least weekly to identify missing patches or updates for vulnerabilities in office productivity suites, web browsers and their extensions, email clients, PDF software, and security products.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q5",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in online services are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q6",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in online services are applied within two weeks of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q7",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in office productivity suites, web browsers and their extensions, email clients, PDF software, and security products are applied within two weeks of release.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q8",
+                        "text": "Online services that are no longer supported by vendors are removed.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    },
+                    {
+                        "id": "pa_l1_q9",
+                        "text": "Office productivity suites, web browsers and their extensions, email clients, PDF software, Adobe Flash Player, and security products that are no longer supported by vendors are removed.",
+                        "strategy": "Patch Applications",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "pa_l2_q1",
+                        "text": "A vulnerability scanner is used at least fortnightly to identify missing patches or updates for vulnerabilities in applications other than office productivity suites, web browsers and their extensions, email clients, PDF software, and security products.",
+                        "strategy": "Patch Applications",
+                        "level": 2
+                    },
+                    {
+                        "id": "pa_l2_q2",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in applications other than office productivity suites, web browsers and their extensions, email clients, PDF software, and security products are applied within one month of release.",
+                        "strategy": "Patch Applications",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "pa_l3_q1",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in office productivity suites, web browsers and their extensions, email clients, PDF software, and security products are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Applications",
+                        "level": 3
+                    },
+                    {
+                        "id": "pa_l3_q2",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in office productivity suites, web browsers and their extensions, email clients, PDF software, and security products are applied within two weeks of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Applications",
+                        "level": 3
+                    },
+                    {
+                        "id": "pa_l3_q3",
+                        "text": "Applications other than office productivity suites, web browsers and their extensions, email clients, PDF software, Adobe Flash Player, and security products that are no longer supported by vendors are removed.",
+                        "strategy": "Patch Applications",
+                        "level": 3
+                    }
+                ]
+            },
+            "patchOperatingSystems": {
+                "level1": [
+                    {
+                        "id": "pos_l1_q1",
+                        "text": "An automated method of asset discovery is used at least fortnightly to support the detection of assets for subsequent vulnerability scanning activities.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q2",
+                        "text": "A vulnerability scanner with an up-to-date vulnerability database is used for vulnerability scanning activities.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q3",
+                        "text": "A vulnerability scanner is used at least daily to identify missing patches or updates for vulnerabilities in operating systems of internet-facing servers and internet-facing network devices.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q4",
+                        "text": "A vulnerability scanner is used at least fortnightly to identify missing patches or updates for vulnerabilities in operating systems of workstations, non-internet-facing servers and non-internet-facing network devices.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q5",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in operating systems of internet-facing servers and internet-facing network devices are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q6",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in operating systems of internet-facing servers and internet-facing network devices are applied within two weeks of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q7",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in operating systems of workstations, non-internet-facing servers and non-internet-facing network devices are applied within one month of release.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    },
+                    {
+                        "id": "pos_l1_q8",
+                        "text": "Operating systems that are no longer supported by vendors are replaced.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "pos_l2_q1",
+                        "text": "Event logs are protected from unauthorised modification and deletion.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 2
+                    },
+                    {
+                        "id": "pos_l2_q2",
+                        "text": "Event logs from internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "pos_l3_q1",
+                        "text": "A vulnerability scanner is used at least fortnightly to identify missing patches or updates for vulnerabilities in drivers.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q2",
+                        "text": "A vulnerability scanner is used at least fortnightly to identify missing patches or updates for vulnerabilities in firmware.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q3",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in operating systems of workstations, non-internet-facing servers and non-internet-facing network devices are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q4",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in operating systems of workstations, non-internet-facing servers and non-internet-facing network devices are applied within one month of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q5",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in drivers are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q6",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in drivers are applied within one month of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q7",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in firmware are applied within 48 hours of release when vulnerabilities are assessed as critical by vendors or when working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q8",
+                        "text": "Patches, updates or other vendor mitigations for vulnerabilities in firmware are applied within one month of release when vulnerabilities are assessed as non-critical by vendors and no working exploits exist.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q9",
+                        "text": "The latest release, or the previous release, of operating systems are used.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q10",
+                        "text": "Event logs from non-internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    },
+                    {
+                        "id": "pos_l3_q11",
+                        "text": "Event logs from workstations are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Patch Operating Systems",
+                        "level": 3
+                    }
+                ]
+            },
+            "multiFactorAuthentication": {
+                "level1": [
+                    {
+                        "id": "mfa_l1_q1",
+                        "text": "Multi-factor authentication is used to authenticate users to their organisation's online services that process, store or communicate their organisation's sensitive data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q2",
+                        "text": "Multi-factor authentication is used to authenticate users to third-party online services that process, store or communicate their organisation's sensitive data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q3",
+                        "text": "Multi-factor authentication (where available) is used to authenticate users to third-party online services that process, store or communicate their organisation's non-sensitive data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q4",
+                        "text": "Multi-factor authentication is used to authenticate users to their organisation's online customer services that process, store or communicate their organisation's sensitive customer data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q5",
+                        "text": "Multi-factor authentication is used to authenticate users to third-party online customer services that process, store or communicate their organisation's sensitive customer data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q6",
+                        "text": "Multi-factor authentication is used to authenticate customers to online customer services that process, store or communicate sensitive customer data.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    },
+                    {
+                        "id": "mfa_l1_q7",
+                        "text": "Multi-factor authentication uses either: something users have and something users know, or something users have that is unlocked by something users know or are.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "mfa_l2_q1",
+                        "text": "Multi-factor authentication is used to authenticate privileged users of systems.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q2",
+                        "text": "Multi-factor authentication is used to authenticate unprivileged users of systems.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q3",
+                        "text": "Multi-factor authentication used for authenticating users of online services is phishing-resistant.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q4",
+                        "text": "Multi-factor authentication used for authenticating customers of online customer services provides a phishing-resistant option.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q5",
+                        "text": "Multi-factor authentication used for authenticating users of systems is phishing-resistant.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q6",
+                        "text": "Successful and unsuccessful multi-factor authentication events are centrally logged.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q7",
+                        "text": "Event logs are protected from unauthorised modification and deletion.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    },
+                    {
+                        "id": "mfa_l2_q8",
+                        "text": "Event logs from internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "mfa_l3_q1",
+                        "text": "Multi-factor authentication is used to authenticate users of data repositories.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 3
+                    },
+                    {
+                        "id": "mfa_l3_q2",
+                        "text": "Multi-factor authentication used for authenticating customers of online customer services is phishing-resistant.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 3
+                    },
+                    {
+                        "id": "mfa_l3_q3",
+                        "text": "Multi-factor authentication used for authenticating users of data repositories is phishing-resistant.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 3
+                    },
+                    {
+                        "id": "mfa_l3_q4",
+                        "text": "Event logs from non-internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 3
+                    },
+                    {
+                        "id": "mfa_l3_q5",
+                        "text": "Event logs from workstations are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Multi-factor Authentication",
+                        "level": 3
+                    }
+                ]
+            },
+            "restrictAdminPrivileges": {
+                "level1": [
+                    {
+                        "id": "rap_l1_q1",
+                        "text": "Requests for privileged access to systems, applications and data repositories are validated when first requested.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q2",
+                        "text": "Privileged users are assigned a dedicated privileged user account to be used solely for duties requiring privileged access.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q3",
+                        "text": "Privileged user accounts (excluding those explicitly authorised to access online services) are prevented from accessing the internet, email and web services.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q4",
+                        "text": "Privileged user accounts explicitly authorised to access online services are strictly limited to only what is required for users and services to undertake their duties.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q5",
+                        "text": "Privileged users use separate privileged and unprivileged operating environments.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q6",
+                        "text": "Unprivileged user accounts cannot logon to privileged operating environments.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    },
+                    {
+                        "id": "rap_l1_q7",
+                        "text": "Privileged user accounts (excluding local administrator accounts) cannot logon to unprivileged operating environments.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "rap_l2_q1",
+                        "text": "Privileged access to systems, applications and data repositories is disabled after 12 months unless revalidated.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q2",
+                        "text": "Privileged access to systems and applications is disabled after 45 days of inactivity.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q3",
+                        "text": "Privileged operating environments are not virtualised within unprivileged operating environments.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q4",
+                        "text": "Administrative activities are conducted through jump servers.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q5",
+                        "text": "Credentials for break glass accounts, local administrator accounts and service accounts are long, unique, unpredictable and managed.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q6",
+                        "text": "Privileged access events are centrally logged.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q7",
+                        "text": "Privileged user account and security group management events are centrally logged.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q8",
+                        "text": "Event logs are protected from unauthorised modification and deletion.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    },
+                    {
+                        "id": "rap_l2_q9",
+                        "text": "Event logs from internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "rap_l3_q1",
+                        "text": "Privileged access to systems, applications and data repositories is limited to only what is required for users and services to undertake their duties.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q2",
+                        "text": "Secure Admin Workstations are used in the performance of administrative activities.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q3",
+                        "text": "Just-in-time administration is used for administering systems and applications.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q4",
+                        "text": "Memory integrity functionality is enabled.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q5",
+                        "text": "Local Security Authority protection functionality is enabled.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q6",
+                        "text": "Credential Guard functionality is enabled.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q7",
+                        "text": "Remote Credential Guard functionality is enabled.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q8",
+                        "text": "Event logs from non-internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    },
+                    {
+                        "id": "rap_l3_q9",
+                        "text": "Event logs from workstations are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "Restrict Admin Privileges",
+                        "level": 3
+                    }
+                ]
+            },
+            "configureMacros": {
+                "level1": [
+                    {
+                        "id": "cm_l1_q1",
+                        "text": "Microsoft Office macros are disabled for users that do not have a demonstrated business requirement.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 1
+                    },
+                    {
+                        "id": "cm_l1_q2",
+                        "text": "Microsoft Office macros in files originating from the internet are blocked.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 1
+                    },
+                    {
+                        "id": "cm_l1_q3",
+                        "text": "Microsoft Office macro antivirus scanning is enabled.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 1
+                    },
+                    {
+                        "id": "cm_l1_q4",
+                        "text": "Microsoft Office macro security settings cannot be changed by users.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "cm_l2_q1",
+                        "text": "Microsoft Office macros are blocked from making Win32 API calls.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "cm_l3_q1",
+                        "text": "Only Microsoft Office macros running from within a sandboxed environment, a Trusted Location or that are digitally signed by a trusted publisher are allowed to execute.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    },
+                    {
+                        "id": "cm_l3_q2",
+                        "text": "Microsoft Office macros are checked to ensure they are free of malicious code before being digitally signed or placed within Trusted Locations.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    },
+                    {
+                        "id": "cm_l3_q3",
+                        "text": "Only privileged users responsible for checking that Microsoft Office macros are free of malicious code can write to and modify content within Trusted Locations.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    },
+                    {
+                        "id": "cm_l3_q4",
+                        "text": "Microsoft Office macros digitally signed by an untrusted publisher cannot be enabled via the Message Bar or Backstage View.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    },
+                    {
+                        "id": "cm_l3_q5",
+                        "text": "Microsoft Office macros digitally signed by signatures other than V3 signatures cannot be enabled via the Message Bar or Backstage View.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    },
+                    {
+                        "id": "cm_l3_q6",
+                        "text": "Microsoft Office's list of trusted publishers is validated on an annual or more frequent basis.",
+                        "strategy": "Configure MS Office Macros",
+                        "level": 3
+                    }
+                ]
+            },
+            "userAppHardening": {
+                "level1": [
+                    {
+                        "id": "uah_l1_q1",
+                        "text": "Internet Explorer 11 is disabled or removed.",
+                        "strategy": "User Application Hardening",
+                        "level": 1
+                    },
+                    {
+                        "id": "uah_l1_q2",
+                        "text": "Web browsers do not process Java from the internet.",
+                        "strategy": "User Application Hardening",
+                        "level": 1
+                    },
+                    {
+                        "id": "uah_l1_q3",
+                        "text": "Web browsers do not process web advertisements from the internet.",
+                        "strategy": "User Application Hardening",
+                        "level": 1
+                    },
+                    {
+                        "id": "uah_l1_q4",
+                        "text": "Web browser security settings cannot be changed by users.",
+                        "strategy": "User Application Hardening",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "uah_l2_q1",
+                        "text": "Web browsers are hardened using ASD and vendor hardening guidance, with the most restrictive guidance taking precedence when conflicts occur.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q2",
+                        "text": "Microsoft Office is blocked from creating child processes.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q3",
+                        "text": "Microsoft Office is blocked from creating executable content.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q4",
+                        "text": "Microsoft Office is blocked from injecting code into other processes.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q5",
+                        "text": "Microsoft Office is configured to prevent activation of Object Linking and Embedding packages.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q6",
+                        "text": "Office productivity suites are hardened using ASD and vendor hardening guidance, with the most restrictive guidance taking precedence when conflicts occur.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q7",
+                        "text": "Office productivity suite security settings cannot be changed by users.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q8",
+                        "text": "PDF software is blocked from creating child processes.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q9",
+                        "text": "PDF software is hardened using ASD and vendor hardening guidance, with the most restrictive guidance taking precedence when conflicts occur.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q10",
+                        "text": "PDF software security settings cannot be changed by users.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q11",
+                        "text": "PowerShell module logging, script block logging and transcription events are centrally logged.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q12",
+                        "text": "Command line process creation events are centrally logged.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q13",
+                        "text": "Event logs are protected from unauthorised modification and deletion.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    },
+                    {
+                        "id": "uah_l2_q14",
+                        "text": "Event logs from internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "User Application Hardening",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "uah_l3_q1",
+                        "text": ".NET Framework 3.5 (includes .NET 2.0 and 3.0) is disabled or removed.",
+                        "strategy": "User Application Hardening",
+                        "level": 3
+                    },
+                    {
+                        "id": "uah_l3_q2",
+                        "text": "Windows PowerShell 2.0 is disabled or removed.",
+                        "strategy": "User Application Hardening",
+                        "level": 3
+                    },
+                    {
+                        "id": "uah_l3_q3",
+                        "text": "PowerShell is configured to use Constrained Language Mode.",
+                        "strategy": "User Application Hardening",
+                        "level": 3
+                    },
+                    {
+                        "id": "uah_l3_q4",
+                        "text": "Event logs from non-internet-facing servers are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "User Application Hardening",
+                        "level": 3
+                    },
+                    {
+                        "id": "uah_l3_q5",
+                        "text": "Event logs from workstations are analysed in a timely manner to detect cyber security events.",
+                        "strategy": "User Application Hardening",
+                        "level": 3
+                    }
+                ]
+            },
+            "regularBackups": {
+                "level1": [
+                    {
+                        "id": "rb_l1_q1",
+                        "text": "Backups of data, applications and settings are performed and retained in accordance with business criticality and business continuity requirements.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    },
+                    {
+                        "id": "rb_l1_q2",
+                        "text": "Backups of data, applications and settings are synchronised to enable restoration to a common point in time.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    },
+                    {
+                        "id": "rb_l1_q3",
+                        "text": "Backups of data, applications and settings are retained in a secure and resilient manner.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    },
+                    {
+                        "id": "rb_l1_q4",
+                        "text": "Restoration of data, applications and settings from backups to a common point in time is tested as part of disaster recovery exercises.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    },
+                    {
+                        "id": "rb_l1_q5",
+                        "text": "Unprivileged user accounts cannot access backups belonging to other user accounts.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    },
+                    {
+                        "id": "rb_l1_q6",
+                        "text": "Unprivileged user accounts are prevented from modifying and deleting backups.",
+                        "strategy": "Regular Backups",
+                        "level": 1
+                    }
+                ],
+                "level2": [
+                    {
+                        "id": "rb_l2_q1",
+                        "text": "Privileged user accounts (excluding backup administrator accounts) cannot access backups belonging to other user accounts.",
+                        "strategy": "Regular Backups",
+                        "level": 2
+                    },
+                    {
+                        "id": "rb_l2_q2",
+                        "text": "Privileged user accounts (excluding backup administrator accounts) are prevented from modifying and deleting backups.",
+                        "strategy": "Regular Backups",
+                        "level": 2
+                    }
+                ],
+                "level3": [
+                    {
+                        "id": "rb_l3_q1",
+                        "text": "Unprivileged user accounts cannot access their own backups.",
+                        "strategy": "Regular Backups",
+                        "level": 3
+                    },
+                    {
+                        "id": "rb_l3_q2",
+                        "text": "Privileged user accounts (excluding backup administrator accounts) cannot access their own backups.",
+                        "strategy": "Regular Backups",
+                        "level": 3
+                    },
+                    {
+                        "id": "rb_l3_q3",
+                        "text": "Backup administrator accounts are prevented from modifying and deleting backups during their retention period.",
+                        "strategy": "Regular Backups",
+                        "level": 3
+                    }
+                ]
+            }
+        };
+
+        // Define strategy name mappings for easier access
+        const strategyNames = {
+            "applicationControl": "Application Control",
+            "patchApplications": "Patch Applications",
+            "patchOperatingSystems": "Patch Operating Systems",
+            "multiFactorAuthentication": "Multi-factor Authentication",
+            "restrictAdminPrivileges": "Restrict Admin Privileges",
+            "configureMacros": "Configure MS Office Macros",
+            "userAppHardening": "User Application Hardening",
+            "regularBackups": "Regular Backups"
+        };
+
+        // Application state
+        let state = {
+            assessmentMode: null, // 'full' or 'goal'
+            targetMaturityLevel: null, // 1, 2, or 3 (for goal assessment)
+            currentQuestionIndex: 0,
+            questions: [],
+            answers: {},
+            results: {
+                strategies: {}
+            }
+        };
+
+        // Initialize UI Elements
+        const introSection = document.getElementById('intro-section');
+        const assessmentSection = document.getElementById('assessment-section');
+        const resultsSection = document.getElementById('results-section');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.querySelector('.progress-bar-inner');
+        const questionCard = document.getElementById('question-card');
+        const questionText = document.getElementById('question-text');
+        const strategyBadge = document.getElementById('strategy-badge');
+        const maturityBadge = document.getElementById('maturity-badge');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const maturityLevelBtns = document.querySelectorAll('.maturity-level-btn');
+        const goalAssessmentBtn = document.getElementById('goal-assessment-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved assessment state from localStorage if exists
+            loadAssessmentState();
+            
+            // Initialize UI elements based on state
+            updateUI();
+            
+            // Event listeners for assessment mode selection
+            document.getElementById('full-assessment-option').addEventListener('click', function() {
+                startAssessment('full');
+            });
+            
+            // Event listeners for maturity level selection
+            maturityLevelBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    maturityLevelBtns.forEach(b => b.classList.remove('bg-orange-100', 'bg-blue-100', 'bg-green-100'));
+                    this.classList.add(this.dataset.level === '1' ? 'bg-orange-100' : this.dataset.level === '2' ? 'bg-blue-100' : 'bg-green-100');
+                    state.targetMaturityLevel = parseInt(this.dataset.level);
+                    goalAssessmentBtn.disabled = false;
+                });
+            });
+            
+            // Event listener for goal assessment button
+            goalAssessmentBtn.addEventListener('click', function() {
+                if (state.targetMaturityLevel) {
+                    startAssessment('goal', state.targetMaturityLevel);
+                }
+            });
+            
+            // Event listeners for answer buttons
+            const answerBtns = document.querySelectorAll('.answer-btn');
+            answerBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const answer = this.dataset.answer;
+                    saveAnswer(state.questions[state.currentQuestionIndex].id, answer);
+                    enableNextButton();
+                });
+            });
+            
+            // Event listener for previous button
+            prevBtn.addEventListener('click', function() {
+                if (state.currentQuestionIndex > 0) {
+                    state.currentQuestionIndex--;
+                    updateQuestionDisplay();
+                    saveAssessmentState();
+                }
+            });
+            
+            // Event listener for next button
+            nextBtn.addEventListener('click', function() {
+                if (state.currentQuestionIndex < state.questions.length - 1) {
+                    state.currentQuestionIndex++;
+                    updateQuestionDisplay();
+                    saveAssessmentState();
+                } else {
+                    // End of assessment
+                    completeAssessment();
+                }
+            });
+            
+            // Event listener for restart button
+            restartBtn.addEventListener('click', function() {
+                resetAssessment();
+                showIntroSection();
+            });
+        });
+
+        // Start an assessment
+        function startAssessment(mode, targetLevel = 3) {
+            state.assessmentMode = mode;
+            state.targetMaturityLevel = targetLevel;
+            state.currentQuestionIndex = 0;
+            state.answers = {};
+            
+            // Build questions array based on assessment mode
+            buildQuestionList();
+            
+            // Hide intro, show assessment
+            showAssessmentSection();
+            
+            // Display first question
+            updateQuestionDisplay();
+            
+            // Save state
+            saveAssessmentState();
+        }
+
+        // Build the list of questions based on assessment mode
+        function buildQuestionList() {
+            state.questions = [];
+            
+            Object.keys(e8Questions).forEach(strategy => {
+                if (state.assessmentMode === 'full') {
+                    // Include all levels for full assessment
+                    for (let level = 1; level <= 3; level++) {
+                        const levelKey = `level${level}`;
+                        if (e8Questions[strategy][levelKey]) {
+                            state.questions = state.questions.concat(e8Questions[strategy][levelKey]);
+                        }
+                    }
+                } else if (state.assessmentMode === 'goal') {
+                    // Include only levels up to target for goal assessment
+                    for (let level = 1; level <= state.targetMaturityLevel; level++) {
+                        const levelKey = `level${level}`;
+                        if (e8Questions[strategy][levelKey]) {
+                            state.questions = state.questions.concat(e8Questions[strategy][levelKey]);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the question display
+        function updateQuestionDisplay() {
+            const question = state.questions[state.currentQuestionIndex];
+            
+            // Update question counter
+            questionCounter.textContent = `Question ${state.currentQuestionIndex + 1} of ${state.questions.length}`;
+            
+            // Update progress bar
+            const progress = ((state.currentQuestionIndex + 1) / state.questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Update question text and badges
+            questionText.textContent = question.text;
+            strategyBadge.textContent = question.strategy;
+            
+            // Set maturity badge color based on level
+            maturityBadge.textContent = `Maturity Level ${question.level}`;
+            maturityBadge.className = 'ml-2 px-3 py-1 rounded-full text-sm font-medium';
+            if (question.level === 1) {
+                maturityBadge.classList.add('bg-orange-100', 'text-orange-800');
+            } else if (question.level === 2) {
+                maturityBadge.classList.add('bg-blue-100', 'text-blue-800');
+            } else if (question.level === 3) {
+                maturityBadge.classList.add('bg-green-100', 'text-green-800');
+            }
+            
+            // Update button states
+            const answerBtns = document.querySelectorAll('.answer-btn');
+            answerBtns.forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2');
+                if (state.answers[question.id] === btn.dataset.answer) {
+                    btn.classList.add('ring-2', 'ring-offset-2');
+                }
+            });
+            
+            // Show/hide previous button
+            prevBtn.classList.toggle('hidden', state.currentQuestionIndex === 0);
+            
+            // Enable/disable next button
+            nextBtn.disabled = !state.answers[question.id];
+            
+            // Update next button text for last question
+            if (state.currentQuestionIndex === state.questions.length - 1) {
+                nextBtn.innerHTML = 'Complete Assessment <svg class="h-5 w-5 inline-block ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+            } else {
+                nextBtn.innerHTML = 'Next <svg class="h-5 w-5 inline-block ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+            }
+        }
+
+        // Save an answer
+        function saveAnswer(questionId, answer) {
+            state.answers[questionId] = answer;
+            saveAssessmentState();
+        }
+
+        // Enable next button after answering
+        function enableNextButton() {
+            nextBtn.disabled = false;
+        }
+
+        // Complete the assessment and show results
+        function completeAssessment() {
+            // Calculate results
+            calculateResults();
+            
+            // Populate results UI
+            populateResultsUI();
+            
+            // Show results section
+            showResultsSection();
+            
+            // Save state
+            saveAssessmentState();
+        }
+
+        // Calculate assessment results
+        function calculateResults() {
+            // Initialize results structure
+            state.results = {
+                overallMaturity: 0,
+                strategies: {}
+            };
+            
+            // Initialize strategy results
+            Object.keys(strategyNames).forEach(strategy => {
+                state.results.strategies[strategy] = {
+                    name: strategyNames[strategy],
+                    maturityLevel: 0,
+                    compliancePercentage: 0,
+                    questionsPerLevel: { 1: 0, 2: 0, 3: 0 },
+                    answersPerLevel: { 1: { yes: 0, no: 0, partially: 0 }, 2: { yes: 0, no: 0, partially: 0 }, 3: { yes: 0, no: 0, partially: 0 } },
+                    gaps: [],
+                    questions: []
+                };
+            });
+            
+            // Process all answers
+            state.questions.forEach(question => {
+                // Determine strategy key
+                const strategyKey = Object.keys(strategyNames).find(key => strategyNames[key] === question.strategy);
+                
+                // Store question and answer
+                state.results.strategies[strategyKey].questions.push({
+                    id: question.id,
+                    text: question.text,
+                    level: question.level,
+                    answer: state.answers[question.id] || 'no' // Default to 'no' if unanswered
+                });
+                
+                // Update counts
+                state.results.strategies[strategyKey].questionsPerLevel[question.level]++;
+                if (state.answers[question.id]) {
+                    state.results.strategies[strategyKey].answersPerLevel[question.level][state.answers[question.id]]++;
+                } else {
+                    state.results.strategies[strategyKey].answersPerLevel[question.level].no++;
+                }
+                
+                // Track gaps (anything not "yes")
+                if (!state.answers[question.id] || state.answers[question.id] !== 'yes') {
+                    state.results.strategies[strategyKey].gaps.push({
+                        text: question.text,
+                        level: question.level,
+                        answer: state.answers[question.id] || 'no'
+                    });
+                }
+            });
+            
+            // Calculate maturity level for each strategy
+            Object.keys(state.results.strategies).forEach(strategy => {
+                // Start from highest level and work down
+                for (let level = 3; level >= 1; level--) {
+                    if (state.results.strategies[strategy].questionsPerLevel[level] > 0) {
+                        const yesCount = state.results.strategies[strategy].answersPerLevel[level].yes;
+                        const totalCount = state.results.strategies[strategy].questionsPerLevel[level];
+                        
+                        // All questions at this level must be "yes" to achieve this level
+                        if (yesCount === totalCount) {
+                            // Check if all questions at lower levels are also "yes"
+                            let allLowerLevelsYes = true;
+                            for (let lowerLevel = 1; lowerLevel < level; lowerLevel++) {
+                                if (state.results.strategies[strategy].questionsPerLevel[lowerLevel] > 0) {
+                                    const lowerYesCount = state.results.strategies[strategy].answersPerLevel[lowerLevel].yes;
+                                    const lowerTotalCount = state.results.strategies[strategy].questionsPerLevel[lowerLevel];
+                                    if (lowerYesCount !== lowerTotalCount) {
+                                        allLowerLevelsYes = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (allLowerLevelsYes) {
+                                state.results.strategies[strategy].maturityLevel = level;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Calculate compliance percentage
+                let totalYes = 0;
+                let totalQuestions = 0;
+                
+                for (let level = 1; level <= 3; level++) {
+                    if (state.results.strategies[strategy].questionsPerLevel[level] > 0) {
+                        totalYes += state.results.strategies[strategy].answersPerLevel[level].yes;
+                        totalQuestions += state.results.strategies[strategy].questionsPerLevel[level];
+                    }
+                }
+                
+                if (totalQuestions > 0) {
+                    state.results.strategies[strategy].compliancePercentage = Math.round((totalYes / totalQuestions) * 100);
+                }
+            });
+            
+            // Calculate overall maturity level (minimum of all strategies)
+            const maturityLevels = Object.values(state.results.strategies).map(s => s.maturityLevel);
+            state.results.overallMaturity = Math.min(...maturityLevels);
+            
+            // Calculate strategies at target
+            if (state.assessmentMode === 'goal') {
+                state.results.strategiesAtTarget = Object.values(state.results.strategies)
+                    .filter(s => s.maturityLevel >= state.targetMaturityLevel).length;
+            } else {
+                state.results.strategiesAtTarget = Object.values(state.results.strategies)
+                    .filter(s => s.maturityLevel === 3).length;
+            }
+            
+            // Calculate overall compliance
+            const totalYes = Object.values(state.results.strategies).reduce((sum, strategy) => {
+                return sum + Object.values(strategy.answersPerLevel).reduce((levelSum, levelAnswers) => {
+                    return levelSum + levelAnswers.yes;
+                }, 0);
+            }, 0);
+            
+            const totalQuestions = state.questions.length;
+            state.results.overallCompliance = Math.round((totalYes / totalQuestions) * 100);
+        }
+
+        // Populate the results UI
+        function populateResultsUI() {
+            // Update summary cards
+            document.getElementById('overall-maturity').textContent = `Level ${state.results.overallMaturity}`;
+            document.getElementById('strategies-at-target').textContent = `${state.results.strategiesAtTarget} of 8`;
+            document.getElementById('overall-compliance').textContent = `${state.results.overallCompliance}%`;
+            
+            // Generate radar chart
+            generateRadarChart();
+            
+            // Generate bar chart
+            generateBarChart();
+            
+            // Populate strategy maturity table
+            populateStrategyTable();
+            
+            // Populate detailed breakdown
+            populateDetailedBreakdown();
+            
+            // Populate recommendations
+            populateRecommendations();
+        }
+
+        // Generate radar chart
+        function generateRadarChart() {
+            const strategies = Object.keys(state.results.strategies);
+            const maturityData = strategies.map(s => state.results.strategies[s].maturityLevel);
+            const labels = strategies.map(s => state.results.strategies[s].name);
+            
+            const ctx = document.getElementById('radar-chart').getContext('2d');
+            
+            if (window.radarChart) {
+                window.radarChart.destroy();
+            }
+            
+            window.radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Maturity Level',
+                        data: maturityData,
+                        backgroundColor: 'rgba(66, 153, 225, 0.2)',
+                        borderColor: 'rgba(66, 153, 225, 1)',
+                        pointBackgroundColor: 'rgba(66, 153, 225, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(66, 153, 225, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 3,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Generate bar chart
+        function generateBarChart() {
+            const strategies = Object.keys(state.results.strategies);
+            const complianceData = strategies.map(s => state.results.strategies[s].compliancePercentage);
+            const labels = strategies.map(s => state.results.strategies[s].name);
+            
+            const ctx = document.getElementById('bar-chart').getContext('2d');
+            
+            if (window.barChart) {
+                window.barChart.destroy();
+            }
+            
+            window.barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Compliance %',
+                        data: complianceData,
+                        backgroundColor: [
+                            'rgba(72, 187, 120, 0.7)',
+                            'rgba(66, 153, 225, 0.7)',
+                            'rgba(246, 173, 85, 0.7)',
+                            'rgba(237, 137, 54, 0.7)',
+                            'rgba(113, 128, 150, 0.7)',
+                            'rgba(160, 174, 192, 0.7)',
+                            'rgba(127, 156, 245, 0.7)',
+                            'rgba(144, 205, 244, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(72, 187, 120, 1)',
+                            'rgba(66, 153, 225, 1)',
+                            'rgba(246, 173, 85, 1)',
+                            'rgba(237, 137, 54, 1)',
+                            'rgba(113, 128, 150, 1)',
+                            'rgba(160, 174, 192, 1)',
+                            'rgba(127, 156, 245, 1)',
+                            'rgba(144, 205, 244, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate strategy maturity table
+        function populateStrategyTable() {
+            const tableBody = document.getElementById('strategy-maturity-table');
+            tableBody.innerHTML = '';
+            
+            Object.keys(state.results.strategies).forEach(strategy => {
+                const strategyData = state.results.strategies[strategy];
+                const row = document.createElement('tr');
+                
+                // Strategy name cell
+                const nameCell = document.createElement('td');
+                nameCell.className = 'py-3 px-4 border-b';
+                nameCell.textContent = strategyData.name;
+                row.appendChild(nameCell);
+                
+                // Maturity level cell
+                const levelCell = document.createElement('td');
+                levelCell.className = 'py-3 px-4 border-b text-center';
+                
+                const levelSpan = document.createElement('span');
+                levelSpan.className = 'px-2 py-1 rounded-full text-xs font-medium';
+                
+                if (strategyData.maturityLevel === 0) {
+                    levelSpan.classList.add('bg-red-100', 'text-red-800');
+                    levelSpan.textContent = 'Level 0';
+                } else if (strategyData.maturityLevel === 1) {
+                    levelSpan.classList.add('bg-orange-100', 'text-orange-800');
+                    levelSpan.textContent = 'Level 1';
+                } else if (strategyData.maturityLevel === 2) {
+                    levelSpan.classList.add('bg-blue-100', 'text-blue-800');
+                    levelSpan.textContent = 'Level 2';
+                } else if (strategyData.maturityLevel === 3) {
+                    levelSpan.classList.add('bg-green-100', 'text-green-800');
+                    levelSpan.textContent = 'Level 3';
+                }
+                
+                levelCell.appendChild(levelSpan);
+                row.appendChild(levelCell);
+                
+                // Key gaps cell
+                const gapsCell = document.createElement('td');
+                gapsCell.className = 'py-3 px-4 border-b';
+                
+                if (strategyData.gaps.length > 0) {
+                    // Sort gaps by level (lower levels first)
+                    const sortedGaps = [...strategyData.gaps].sort((a, b) => a.level - b.level);
+                    
+                    // Display up to 2 gaps
+                    const gapsToShow = sortedGaps.slice(0, 2);
+                    const gapsList = document.createElement('ul');
+                    gapsList.className = 'text-sm';
+                    
+                    gapsToShow.forEach(gap => {
+                        const gapItem = document.createElement('li');
+                        gapItem.className = 'mb-1';
+                        gapItem.textContent = `L${gap.level}: ${gap.text.substring(0, 80)}${gap.text.length > 80 ? '...' : ''}`;
+                        gapsList.appendChild(gapItem);
+                    });
+                    
+                    if (sortedGaps.length > 2) {
+                        const moreItem = document.createElement('li');
+                        moreItem.className = 'text-blue-500 italic';
+                        moreItem.textContent = `+ ${sortedGaps.length - 2} more gaps`;
+                        gapsList.appendChild(moreItem);
+                    }
+                    
+                    gapsCell.appendChild(gapsList);
+                } else {
+                    gapsCell.textContent = 'No gaps identified';
+                }
+                
+                row.appendChild(gapsCell);
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate detailed breakdown
+        function populateDetailedBreakdown() {
+            const detailedBreakdown = document.getElementById('detailed-breakdown');
+            detailedBreakdown.innerHTML = '';
+            
+            Object.keys(state.results.strategies).forEach(strategy => {
+                const strategyData = state.results.strategies[strategy];
+                
+                // Create accordion item
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'border border-gray-200 rounded-lg overflow-hidden';
+                
+                // Create accordion header
+                const accordionHeader = document.createElement('div');
+                accordionHeader.className = 'bg-gray-50 p-4 flex justify-between items-center accordion-header';
+                accordionHeader.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold text-gray-700">${strategyData.name}</span>
+                        <span class="ml-3 px-2 py-1 rounded-full text-xs font-medium ${
+                            strategyData.maturityLevel === 0 ? 'bg-red-100 text-red-800' :
+                            strategyData.maturityLevel === 1 ? 'bg-orange-100 text-orange-800' :
+                            strategyData.maturityLevel === 2 ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                        }">Level ${strategyData.maturityLevel}</span>
+                    </div>
+                    <svg class="h-5 w-5 text-gray-500 accordion-arrow" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                `;
+                
+                // Create accordion content
+                const accordionContent = document.createElement('div');
+                accordionContent.className = 'accordion-content';
+                
+                // Group questions by maturity level
+                const questionsByLevel = { 1: [], 2: [], 3: [] };
+                strategyData.questions.forEach(q => {
+                    questionsByLevel[q.level].push(q);
+                });
+                
+                // Generate content for each level
+                for (let level = 1; level <= 3; level++) {
+                    if (questionsByLevel[level].length > 0) {
+                        const levelSection = document.createElement('div');
+                        levelSection.className = 'p-4 border-t border-gray-200';
+                        
+                        const levelHeader = document.createElement('h4');
+                        levelHeader.className = `text-md font-semibold mb-3 ${
+                            level === 1 ? 'text-orange-700' :
+                            level === 2 ? 'text-blue-700' :
+                            'text-green-700'
+                        }`;
+                        levelHeader.textContent = `Maturity Level ${level}`;
+                        levelSection.appendChild(levelHeader);
+                        
+                        const questionsList = document.createElement('ul');
+                        questionsList.className = 'space-y-3';
+                        
+                        questionsByLevel[level].forEach(question => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'text-sm flex flex-col sm:flex-row sm:items-center justify-between';
+                            
+                            const questionSpan = document.createElement('span');
+                            questionSpan.className = 'flex-1';
+                            questionSpan.textContent = question.text;
+                            
+                            const answerSpan = document.createElement('span');
+                            answerSpan.className = `ml-0 sm:ml-4 mt-2 sm:mt-0 answer-pill ${
+                                question.answer === 'yes' ? 'answer-yes' :
+                                question.answer === 'no' ? 'answer-no' :
+                                'answer-partially'
+                            }`;
+                            answerSpan.textContent = question.answer === 'yes' ? 'Yes' : question.answer === 'no' ? 'No' : 'Partially';
+                            
+                            listItem.appendChild(questionSpan);
+                            listItem.appendChild(answerSpan);
+                            questionsList.appendChild(listItem);
+                        });
+                        
+                        levelSection.appendChild(questionsList);
+                        accordionContent.appendChild(levelSection);
+                    }
+                }
+                
+                // Add event listener to toggle accordion
+                accordionHeader.addEventListener('click', function() {
+                    this.querySelector('.accordion-arrow').classList.toggle('transform');
+                    this.querySelector('.accordion-arrow').classList.toggle('rotate-180');
+                    accordionContent.classList.toggle('active');
+                });
+                
+                // Append accordion components
+                accordionItem.appendChild(accordionHeader);
+                accordionItem.appendChild(accordionContent);
+                detailedBreakdown.appendChild(accordionItem);
+            });
+        }
+
+        // Populate recommendations
+        function populateRecommendations() {
+            const recommendationsContainer = document.getElementById('recommendations');
+            recommendationsContainer.innerHTML = '';
+            
+            // Get strategies sorted by maturity level (lowest first)
+            const sortedStrategies = Object.entries(state.results.strategies)
+                .sort((a, b) => a[1].maturityLevel - b[1].maturityLevel)
+                .map(entry => entry[1]);
+            
+            const recommendationsList = document.createElement('ul');
+            recommendationsList.className = 'space-y-4';
+            
+            // Recommendation 1: Strategies with lowest maturity
+            const lowestMaturity = sortedStrategies[0].maturityLevel;
+            const lowestMaturityStrategies = sortedStrategies.filter(s => s.maturityLevel === lowestMaturity);
+            
+            if (lowestMaturityStrategies.length > 0) {
+                const rec1 = document.createElement('li');
+                rec1.className = 'flex items-start';
+                rec1.innerHTML = `
+                    <svg class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>
+                        <strong>Priority Focus:</strong> Concentrate first on implementing ${lowestMaturity === 0 ? 'Level 1' : `Level ${lowestMaturity + 1}`} controls for 
+                        ${lowestMaturityStrategies.map(s => s.name).join(', ')}.
+                        ${lowestMaturity === 0 ? ' These strategies currently have significant gaps.' : ''}
+                    </span>
+                `;
+                recommendationsList.appendChild(rec1);
+            }
+            
+            // Recommendation 2: Top gaps in highest maturity strategies
+            const highMaturityStrategies = sortedStrategies.filter(s => s.maturityLevel >= Math.max(1, lowestMaturity));
+            
+            if (highMaturityStrategies.length > 0) {
+                const topGaps = [];
+                
+                highMaturityStrategies.forEach(strategy => {
+                    // Get level-appropriate gaps
+                    const nextLevel = strategy.maturityLevel + 1;
+                    if (nextLevel <= 3) {
+                        const levelGaps = strategy.gaps.filter(g => g.level === nextLevel);
+                        if (levelGaps.length > 0) {
+                            topGaps.push({
+                                strategy: strategy.name,
+                                gap: levelGaps[0].text,
+                                level: nextLevel
+                            });
+                        }
+                    }
+                });
+                
+                if (topGaps.length > 0) {
+                    const rec2 = document.createElement('li');
+                    rec2.className = 'flex items-start';
+                    
+                    const rec2Text = document.createElement('span');
+                    rec2Text.innerHTML = `
+                        <strong>Quick Wins:</strong> Address these specific controls to make progress on your more mature strategies:
+                    `;
+                    
+                    const gapsList = document.createElement('ul');
+                    gapsList.className = 'list-disc pl-5 mt-2 space-y-1';
+                    
+                    topGaps.slice(0, 3).forEach(gap => {
+                        const gapItem = document.createElement('li');
+                        gapItem.innerHTML = `<strong>${gap.strategy} (Level ${gap.level}):</strong> ${gap.gap}`;
+                        gapsList.appendChild(gapItem);
+                    });
+                    
+                    rec2.innerHTML = `
+                        <svg class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    `;
+                    rec2.appendChild(rec2Text);
+                    rec2.appendChild(gapsList);
+                    
+                    recommendationsList.appendChild(rec2);
+                }
+            }
+            
+            // Recommendation 3: General guidance based on overall maturity
+            const rec3 = document.createElement('li');
+            rec3.className = 'flex items-start';
+            
+            let guidanceText = '';
+            if (state.results.overallMaturity === 0) {
+                guidanceText = 'Focus on achieving Level 1 across all Essential Eight strategies to establish basic cyber security posture. Prioritize Application Control, Patch Applications, and Multi-factor Authentication for the most impact.';
+            } else if (state.results.overallMaturity === 1) {
+                guidanceText = 'Your organization has established basic cyber security controls. To progress to Level 2, strengthen privileged access controls and implement more comprehensive logging and monitoring capabilities.';
+            } else if (state.results.overallMaturity === 2) {
+                guidanceText = 'Your organization has a strong cyber security foundation. To reach Level 3, focus on implementing advanced controls for Microsoft Office macros, application hardening, and ensuring comprehensive monitoring across all systems.';
+            } else {
+                guidanceText = 'Congratulations on reaching Level 3! Focus on maintaining this posture through regular reviews, testing, and continuous improvement. Consider expanding beyond the Essential Eight for additional security.';
+            }
+            
+            rec3.innerHTML = `
+                <svg class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>
+                    <strong>Overall Strategy:</strong> ${guidanceText}
+                </span>
+            `;
+            recommendationsList.appendChild(rec3);
+            
+            recommendationsContainer.appendChild(recommendationsList);
+        }
+
+        // UI Navigation functions
+        function showIntroSection() {
+            introSection.classList.remove('hidden');
+            assessmentSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function showAssessmentSection() {
+            introSection.classList.add('hidden');
+            assessmentSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function showResultsSection() {
+            introSection.classList.add('hidden');
+            assessmentSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+        }
+
+        // Local Storage functions
+        function saveAssessmentState() {
+            localStorage.setItem('e8AssessmentState', JSON.stringify(state));
+        }
+
+        function loadAssessmentState() {
+            const savedState = localStorage.getItem('e8AssessmentState');
+            if (savedState) {
+                state = JSON.parse(savedState);
+            }
+        }
+
+        function resetAssessment() {
+            state = {
+                assessmentMode: null,
+                targetMaturityLevel: null,
+                currentQuestionIndex: 0,
+                questions: [],
+                answers: {},
+                results: {
+                    strategies: {}
+                }
+            };
+            saveAssessmentState();
+        }
+
+        // Update UI based on state
+        function updateUI() {
+            if (state.assessmentMode) {
+                if (state.results.overallMaturity !== undefined) {
+                    // Show results
+                    populateResultsUI();
+                    showResultsSection();
+                } else {
+                    // Show assessment
+                    updateQuestionDisplay();
+                    showAssessmentSection();
+                }
+            } else {
+                // Show intro
+                showIntroSection();
+            }
+        }
+    </script>
+</body>
+</html>
